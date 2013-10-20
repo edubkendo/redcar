@@ -36,3 +36,4 @@ plugins/core/spec/core/*.yaml
 plugins/scm_svn/features/fixtures
 
 tmp
+vendor/jruby
