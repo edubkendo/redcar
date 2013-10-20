@@ -112,12 +112,13 @@ module Redcar
     end
   end
 
+  # TODO: Restore ability to install plugins from Gems.
   def self.add_plugin_sources(manager)
     manager.add_plugin_source(File.join(root, "plugins"))
     manager.add_plugin_source(File.join(user_dir, "plugins"))
-    unless Redcar.environment == :test
-      manager.add_gem_plugin_source
-    end
+    # unless Redcar.environment == :test
+    #   manager.add_gem_plugin_source
+    # end
   end
 
   def self.load_prerequisites(options={})

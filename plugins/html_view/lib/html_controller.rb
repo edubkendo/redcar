@@ -25,6 +25,7 @@ module Redcar
       notify_listeners(:execute_script, script)
     end
 
+    # TODO: remove in favor of calling rubyCall function directly
     def javascript_controller_actions
       methods = self.methods - Object.methods
       <<-JS

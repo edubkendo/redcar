@@ -4,7 +4,7 @@ module Redcar
     def run
       forking = ARGV.include?("--fork")
       no_runner = ARGV.include?("--no-sub-jruby")
-      jruby = Config::CONFIG["RUBY_INSTALL_NAME"] == "jruby"
+      jruby = RbConfig::CONFIG["RUBY_INSTALL_NAME"] == "jruby"
       osx = (not [:linux, :windows].include?(Redcar.platform))
       begin
         if forking and not jruby
@@ -12,7 +12,7 @@ module Redcar
           forking = false
           puts 'Forking failed, attempting to start anyway...' if (pid = fork) == -1
           exit unless pid.nil? # kill the parent process
-          
+
           if pid.nil?
             # reopen the standard pipes to nothingness
             STDIN.reopen Redcar.null_device
@@ -21,7 +21,7 @@ module Redcar
           end
         elsif forking and SPOON_AVAILABLE
           # so we need to try something different...
-          
+
           forking = false
           construct_command do |command|
             command.push('--silent')
@@ -36,28 +36,28 @@ module Redcar
         puts "Forking isn't supported on this system. Sorry."
         puts "Starting normally..."
       end
-      
+
       return if no_runner
       return if jruby and not osx
-      
+
       construct_command do |command|
         exec(command.join(" "))
       end
     end
-    
-    # Trade in this Ruby instance for a JRuby instance, loading in a 
+
+    # Trade in this Ruby instance for a JRuby instance, loading in a
     # starter script and passing it some arguments.
     def construct_command(args="")
       require 'rubygems'
       require 'redcar-jruby'
-      
+
       bin = File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. bin redcar}))
       ENV['RUBYOPT'] = nil # disable other native args
 
       # Windows XP updates
       if [:windows].include?(Redcar.platform)
         bin = "\"#{bin}\""
-      end      
+      end
 
       jruby_complete = RedcarJRuby.jar_path
       command = (RUBY_PLATFORM.downcase =~ /mswin|mingw|win32/ ? ["javaw"] : ["java"])
@@ -74,7 +74,7 @@ module Redcar
       puts command.join(' ')
       yield command
     end
-    
+
     def cleaned_args
       # We should never pass --fork to a subprocess
       result = ARGV.find_all {|arg| arg != '--fork'}.map do |arg|
@@ -86,24 +86,24 @@ module Redcar
       end
       result
     end
-    
+
     def debug_mode?
       ARGV.include?("--debug")
     end
-    
+
     def java_args
       str = []
       if Config::CONFIG["host_os"] =~ /darwin/
         str.push "-XstartOnFirstThread"
       end
-      
+
       if ARGV.include?("--load-timings")
         str.push "-Djruby.debug.loadService.timing=true"
       end
 
       str.push "-d32" if JvmOptionsProbe.d32
       str.push "-client" if JvmOptionsProbe.client
-      
+
       str
     end
 
@@ -111,12 +111,12 @@ module Redcar
       def self.redirect
         @redirect ||= "> #{Redcar.null_device} 2>&1"
       end
-      
+
       def self.d32
         @d32 ||= system("java -d32 #{redirect}")
       end
-      
-      def self.client 
+
+      def self.client
         @client ||= system("java -client #{redirect}")
       end
     end

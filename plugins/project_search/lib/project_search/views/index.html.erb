@@ -91,11 +91,12 @@
 
     $('#search_form').submit(function(ev) {
       ev.preventDefault();
+
       try {
         if ($("#literal_match").attr('checked')) { var literal_match = 'true'; } else { var literal_match = 'false'; }
         if ($("#match_case").attr('checked')) { var match_case = 'true'; } else { var match_case = 'false'; }
         if ($("#with_context").attr('checked')) { var with_context = 'true'; } else { var with_context = 'false'; }
-        Controller.search($("#query").val(), literal_match, match_case, with_context);
+        rubyCall("search", $("#query").val(), literal_match, match_case, with_context);
       } catch(e) {
         alert(e.message);
       }
@@ -135,7 +136,7 @@
       try {
         if ($("#literal_match").attr('checked')) { var literal_match = 'true'; } else { var literal_match = 'false'; }
         if ($("#match_case").attr('checked')) { var match_case = 'true'; } else { var match_case = 'false'; }
-        Controller.openFile($(this).attr('data-href'), $(this).attr('data-line_num'), $("#cached_query").val(), literal_match, match_case);
+        rubyCall("open_file", $(this).attr('data-href'), $(this).attr('data-line_num'), $('#cached_query').val(), literal_match, match_case);
       } catch(e) {
         alert(e.message);
       }

@@ -160,7 +160,7 @@ module Redcar
       end
 
       def parse(files)
-        files.each do |path|
+        Array(files).each do |path|
           @tags += match_in_file(path)
         end
       end

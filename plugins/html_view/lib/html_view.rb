@@ -41,7 +41,7 @@ module Redcar
          storage
       end
     end
-    
+
     def self.show_browser_bar?
       if win = Redcar.app.focussed_window and
         win.speedbar and win.speedbar.is_a?(BrowserBar)
@@ -80,7 +80,7 @@ module Redcar
       refresh
       attach_controller_listeners
     end
-    
+
     def refresh
       controller_action("index")
     end
@@ -130,7 +130,7 @@ module Redcar
       end
       if text
         unless @html_tab.controller.browser.disposed
-          @html_tab.controller.browser.set_text(text.to_s + setup_javascript_listeners)
+          @html_tab.controller.browser.set_text(text.to_s)
         end
       end
     end
