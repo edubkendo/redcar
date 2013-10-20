@@ -12,7 +12,7 @@ class RedcarGemspecHelper
       filelist
     end
   end
-  
+
   def self.remove_matching_files(list, string)
     list.reject {|entry| entry.include?(string)}
   end
@@ -36,11 +36,11 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/danlucraft/redcar"
   s.summary     = "A pure Ruby text editor"
   s.description = ""
- 
+
   s.files        = RedcarGemspecHelper.gem_manifest
   s.executables  = ["redcar"]
   s.require_path = 'lib'
-  
+
   s.add_dependency("git")
   s.add_dependency("spoon")
   s.add_dependency("lucene", "~> 0.5.0.beta.1")
@@ -51,7 +51,7 @@ Gem::Specification.new do |s|
   s.add_dependency("jruby-openssl")
   s.add_dependency("ruby-blockcache")
   s.add_dependency("bouncy-castle-java")
-  
+
   s.add_dependency("swt")
   s.add_dependency("plugin_manager")
   s.add_dependency("redcar-icons")
@@ -60,9 +60,10 @@ Gem::Specification.new do |s|
   s.add_dependency("redcar-bundles")
   s.add_dependency("redcar-javamateview")
   s.add_dependency("redcar-xulrunner-win") if s.platform.to_s =~ /win/
-  
+
   s.add_development_dependency("cucumber", "=1.1.2")
   s.add_development_dependency("rspec")
   s.add_development_dependency("watchr")
+  s.add_development_dependency("rake")
 end
 

@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 module Redcar
   class TreeViewSWT
     attr_reader :viewer, :model
