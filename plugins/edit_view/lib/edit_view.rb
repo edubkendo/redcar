@@ -103,13 +103,13 @@ module Redcar
             sub_menu "Tabs" do
               item "Soft Tabs", :command => EditView::ToggleSoftTabsCommand,
                                 :type => :check,
-                                :checked => proc { tab and tab.edit_view.soft_tabs? }
+                                :checked => proc { tab.respond_to?(:edit_view) and tab.edit_view.soft_tabs? }
 
               sub_menu "Tab Width" do
                 TabSettings::TAB_WIDTHS.each do |width|
                   command_klass = Class.new(SetTabWidthCommand)
                   command_klass.width = width.to_i
-                  already_checker = proc { tab and tab.edit_view.tab_width.to_s == width.to_s }
+                  already_checker = proc { tab.respond_to?(:edit_view) and tab.edit_view.tab_width.to_s == width.to_s }
                   item width, :command => command_klass, :type => :check, :checked => already_checker
                 end
               end
