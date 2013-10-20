@@ -1,4 +1,4 @@
-$KCODE="U"
+# $KCODE="U"
 #
 # The cucumber environment. Loads support env.rb files and step definition
 # files from every plugin.

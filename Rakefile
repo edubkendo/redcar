@@ -95,7 +95,7 @@ namespace :ci do
     Rake::Task["ci:rcov:specs"].invoke
     Rake::Task["ci:rcov:cucumber"].invoke
   end
-  
+
   def find_ci_reporter(filename)
     jruby_gem_path = %x[jruby -rubygems -e "p Gem.path.first"].gsub("\n", "").gsub('"', "")
     result = Dir.glob("#{jruby_gem_path}/gems/ci_reporter-*/lib/ci/reporter/rake/#{filename}.rb").reverse.first
@@ -108,7 +108,7 @@ namespace :ci do
     rspec_opts = "--require #{rspec_loader} --format CI::Reporter::RSpec"
     jruby_run(rspec(rspec_opts))
   end
-  
+
   desc "Run the features with JUnit output for the Hudson reporter"
   task :cucumber do
     reports_folder = "features/reports"
@@ -137,10 +137,10 @@ end
 
 desc "Run all features"
 task :cucumber do
-  cmd = "jruby "
-  cmd << "-J-XstartOnFirstThread " if Config::CONFIG["host_os"] =~ /darwin/
+  cmd = ""
+  cmd << "JRUBY_OPTS='-J-Dfile.encoding=UTF-8 -J-Djava.awt.headless=false -J-XstartOnFirstThread' " if Config::CONFIG["host_os"] =~ /darwin/
   all_feature_dirs = Dir['plugins/*/features'] # overcome a jruby windows bug http://jira.codehaus.org/browse/JRUBY-4527
-  cmd << "bin/cucumber -cf progress -e \".*fixtures.*\" #{all_feature_dirs.join(' ')}"
+  cmd << "jruby -S bundle exec swt_cucumber -renv.rb plugins/*/features/"
   sh("#{cmd} && echo 'done'")
 end
 
@@ -168,7 +168,7 @@ task :run_ci do
       puts a
       system a
     end
-  
+
     spec_filename = "#{filename[1]}_spec.rb"
     spec = Dir["**/#{spec_filename}"]
     if spec.length > 0
@@ -187,7 +187,7 @@ namespace :redcar do
   end
 
   require 'json'
-  
+
   desc "Redcar Integration: output runnable info"
   task :runnables do
     mkdir_p(".redcar/runnables")
@@ -198,7 +198,7 @@ namespace :redcar do
         $stderr.sync = true
       RUBY
     end
-    
+
     tasks = Rake::Task.tasks
     runnables = []
     ruby_bin = Config::CONFIG["bindir"] + "/ruby -r#{File.dirname(__FILE__)}/.redcar/runnables/sync_stdout.rb "
@@ -230,7 +230,7 @@ namespace :redcar do
       f.puts(JSON.pretty_generate(data))
     end
   end
-  
+
   task :sample do
     5.times do |i|
       puts "out#{i}"

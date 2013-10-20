@@ -16,7 +16,7 @@ require 'net/http'
 
 require 'rubygems'
 
-# If we are running as a Gem, don't use bundler and also set the gem home 
+# If we are running as a Gem, don't use bundler and also set the gem home
 # so our gemified jruby can find the installed gems.
 prospective_gem_home = File.expand_path("../../../../", __FILE__)
 entries_in_gem_home  = Dir[prospective_gem_home + "/*"].map {|path| File.basename(path) }
@@ -29,7 +29,7 @@ end
 require 'redcar-icons'
 
 begin
-  if Config::CONFIG["RUBY_INSTALL_NAME"] == "jruby"
+  if RbConfig::CONFIG["RUBY_INSTALL_NAME"] == "jruby"
 =begin
     gem "spoon"
     require 'spoon'
@@ -73,11 +73,11 @@ module Redcar
   VERSION_MAJOR   = 0
   VERSION_MINOR   = 13
   VERSION_RELEASE = 0
-  
+
   ENVIRONMENTS = [:user, :debug, :test]
-  
+
   PROCESS_START_TIME = Time.now
-  
+
   def self.icons_directory
     RedcarIcons.directory
   end
@@ -88,7 +88,7 @@ module Redcar
     end
     @environment = env
   end
-  
+
   def self.environment
     raise "no environment set" unless @environment
     @environment
@@ -123,12 +123,12 @@ module Redcar
   def self.load_prerequisites(options={})
     exit if ARGV.include?("--quit-immediately")
     require 'java'
-    
+
     require 'redcar_quick_start'
-    
+
     gem "plugin_manager"
     require 'plugin_manager'
-    
+
     $:.push File.expand_path(File.join(Redcar.asset_dir))
 
     unless defined?(JSON)
@@ -138,28 +138,28 @@ module Redcar
 
     gem "jruby-openssl"
     require 'openssl'
-    
+
     plugin_manager.load("core")
-    
+
     gem 'swt'
     require 'swt/minimal'
-      
+
     unless no_gui_mode?
       gui = Redcar::Gui.new("swt")
       gui.register_event_loop(Swt::EventLoop.new)
       gui.register_features_runner(Swt::CucumberRunner.new)
       Redcar.gui = gui
-    
+
       plugin_manager.load("splash_screen")
     end
   end
-  
+
   def self.load_plugins
     begin
       exit if ARGV.include?("--quit-after-splash")
-      
+
       plugin_manager.load
-      
+
       if plugin_manager.unreadable_definitions.any?
         puts "Couldn't read definition files:  " + plugin_manager.unreadable_definitions.map {|pd| pd.name}.join(", ")
       end
@@ -176,7 +176,7 @@ module Redcar
       puts e.backtrace
     end
   end
-  
+
   # Tells the plugin manager to load plugins, and prints debug output.
   def self.load_threaded
     load_prerequisites
@@ -188,20 +188,20 @@ module Redcar
       thread.join
     end
   end
-  
+
   def self.load_unthreaded(options={})
     load_prerequisites(options)
     load_plugins
   end
-  
+
   def self.no_gui_mode?
     @no_gui_mode || ARGV.include?("--no-gui")
   end
-  
+
   def self.no_gui_mode!
     @no_gui_mode = true
   end
-  
+
   def self.show_splash
     return if Redcar.no_gui_mode?
     unless ARGV.include?("--no-splash")
@@ -217,12 +217,12 @@ module Redcar
   ## Starts the GUI.
   def self.pump
     return if Redcar.no_gui_mode?
-    
+
     Redcar.gui.start
   end
-  
+
   # Check if redcar was already installed (currently it just looks if the user_dir is present)
-  # 
+  #
   # @return [Bool] true if redcar was installed previously
   def self.installed?
     return true if File.directory? user_dir
@@ -232,7 +232,7 @@ module Redcar
   def self.ensure_user_dir_config
     FileUtils.mkdir_p(user_dir)
   end
-  
+
   # Platform specific ~/.redcar
   #
   # @return [String] expanded path
@@ -244,12 +244,12 @@ module Redcar
     }[Redcar.environment]
     File.expand_path(File.join(home_dir, dirname))
   end
-  
+
   # Platform specific ~/.redcar/assets
   def self.asset_dir
     File.join(home_dir, ".redcar", "assets")
   end
-  
+
   # Platform specific ~/
   #
   # @return [String] expanded path
@@ -268,19 +268,19 @@ module Redcar
       end
     end
   end
-  
+
   class << self
     attr_accessor :app
     attr_reader :gui
   end
-  
+
   # Set the application GUI.
   def self.gui=(gui)
     raise "can't set gui twice" if @gui
     return if Redcar.no_gui_mode?
     @gui = gui
   end
-  
+
   def self.log
     @log ||= begin
       targets = [log_file]
@@ -291,23 +291,23 @@ module Redcar
       logger
     end
   end
-  
+
   def self.log_path
     user_dir + "/#{environment}.log"
   end
-  
+
   def self.log_file
     File.open(log_path, "a")
   end
-  
+
   def self.show_log?
     ARGV.include?("--show-log") or ENV["REDCAR_SHOW_LOG"]
   end
-  
+
   def self.custom_log_level
     ARGV.map {|a| a =~ /--log-level=(info|debug|warn|error)/; $1}.compact.first
   end
-  
+
   def self.process_start_time
     @process_start_time ||= begin
       t = ARGV.map {|arg| arg =~ /--start-time=(\d+)$/; $1}.compact.first
