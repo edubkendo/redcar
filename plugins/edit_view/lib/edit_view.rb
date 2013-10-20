@@ -99,37 +99,37 @@ module Redcar
         sub_menu "Edit" do
           group(:priority => 20) do
             item "Change Language", ChangeLanguageCommand
-            
+
             sub_menu "Tabs" do
               item "Soft Tabs", :command => EditView::ToggleSoftTabsCommand,
-                                :type => :check, 
-                                :checked => lambda { tab and tab.edit_view.soft_tabs? }
-                                
+                                :type => :check,
+                                :checked => proc { tab and tab.edit_view.soft_tabs? }
+
               sub_menu "Tab Width" do
                 TabSettings::TAB_WIDTHS.each do |width|
                   command_klass = Class.new(SetTabWidthCommand)
                   command_klass.width = width.to_i
-                  already_checker = lambda { tab and tab.edit_view.tab_width.to_s == width.to_s }
+                  already_checker = proc { tab and tab.edit_view.tab_width.to_s == width.to_s }
                   item width, :command => command_klass, :type => :check, :checked => already_checker
                 end
               end
             end
-            
+
             sub_menu "Margin" do
               item "Word Wrap", :command => EditView::ToggleWordWrapCommand,
-                                :type => :check, 
-                                :checked => lambda { tab and tab.edit_view.word_wrap? }
-              
+                                :type => :check,
+                                :checked => proc { tab.respond_to?(:edit_view) and tab.edit_view.word_wrap? }
+
               item "Show Margin", :command => EditView::ToggleShowMarginCommand,
-                                  :type => :check, 
-                                  :checked => lambda { tab and tab.edit_view.show_margin? }
-  
-              item lambda { tab ? "Margin Column: #{tab.edit_view.margin_column}" : "Margin Column" }, SetMarginColumnCommand
+                                  :type => :check,
+                                  :checked => proc { tab.respond_to?(:edit_view) and tab.edit_view.show_margin? }
+
+              item proc { tab ? "Margin Column: #{tab.edit_view.margin_column}" : "Margin Column" }, SetMarginColumnCommand
             end
 
             separator
           end
-          
+
           sub_menu "Formatting" do
             item "Align Assignments", EditView::AlignAssignmentCommand
             sub_menu "Convert Text", :priority => 40 do
@@ -177,21 +177,21 @@ module Redcar
         end
       end
     end
-    
+
     def self.quit_guard
       EditView::ModifiedTabsChecker.new(
         Redcar.app.all_tabs.select {|t| t.is_a?(EditTab)},
         "Save all before quitting?"
       ).check
     end
-    
+
     def self.close_window_guard(win)
       EditView::ModifiedTabsChecker.new(
         win.notebooks.map(&:tabs).flatten.select {|t| t.is_a?(EditTab)},
         "Save all before closing the window?"
       ).check
     end
-  
+
     def self.close_tab_guard(tab)
       if tab.respond_to?(:edit_view) && tab.edit_view.document.modified? && !tab.is_a?(REPL::Tab)
         tab.focus
@@ -338,7 +338,7 @@ module Redcar
       edit_view.check_for_updated_document if edit_view
       notify_listeners(:focussed_edit_view, edit_view)
     end
-    
+
     def self.protect_edit_view_focus
       @protect_edit_view_focus = true
       yield
@@ -391,7 +391,7 @@ module Redcar
         9
       end
     end
-    
+
     def self.default_font
       if Redcar.platform == :osx
         "Monaco"
@@ -711,7 +711,7 @@ module Redcar
       end
       history.record(action_symbol)
     end
-    
+
     def inspect
       "#<Redcar::EditView document:#{document.inspect}>"
     end

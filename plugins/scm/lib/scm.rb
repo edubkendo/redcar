@@ -220,7 +220,7 @@ module Redcar
                 if repo.supported_commands.include?(:pull_targetted)
                   lazy_sub_menu repo.translations[:pull_targetted] do
                     repo.pull_targets.sort.each do |target|
-                      action = lambda do
+                      action = proc do
                         begin
                           repo.pull!(target)
 
@@ -241,7 +241,7 @@ module Redcar
                   lazy_sub_menu repo.translations[:switch_branch] do
                     current = repo.current_branch
                     repo.branches.sort.each do |branch|
-                      action = lambda {
+                      action = proc {
                         begin
                           repo.switch!(branch)
 

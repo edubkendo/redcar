@@ -351,7 +351,7 @@ module Redcar
               item "Find File", Project::FindFileCommand
               # item "Refresh Directory", Project::RefreshDirectoryCommand
             end
-            item "Reveal Open File in Tree", :command => Project::ToggleRevealInProject, :type => :check, :checked => lambda { Project::Manager.reveal_files? }
+            item "Reveal Open File in Tree", :command => Project::ToggleRevealInProject, :type => :check, :checked => proc { Project::Manager.reveal_files? }
           end
         end
       end
@@ -364,7 +364,7 @@ module Redcar
           end
         end
       end
-      
+
       # Uses our own context menu hook to provide context menu entries
       # @return [Menu]
       def self.project_context_menus(tree, node, controller)

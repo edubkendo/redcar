@@ -88,7 +88,7 @@ module Redcar
         end
       end
     end
-    
+
     class GenerateGrammarsMenu
       def self.on(builder)
         builder.item "Ruby", AboutCommand
@@ -267,13 +267,13 @@ Redcar.environment: #{Redcar.environment}
         end
       end
     end
-    
+
     class BackwardNavigationCommand < Command
       def execute
         Redcar.app.navigation_history.backward
       end
     end
-    
+
     class ForwardNavigationCommand < Command
       def execute
         Redcar.app.navigation_history.forward
@@ -655,7 +655,7 @@ Redcar.environment: #{Redcar.environment}
         link "Ctrl+O",  OpenLineCommand
         link "Ctrl+D",  DeleteCharCommand
         link "Ctrl+H",  BackspaceCommand
-        
+
         link "Ctrl+Alt+Left", BackwardNavigationCommand
         link "Ctrl+Alt+Right", ForwardNavigationCommand
 
@@ -747,7 +747,7 @@ Redcar.environment: #{Redcar.environment}
         link "End",        MoveEndCommand
         link "Ctrl+Alt+E", MoveEndCommand
         link "Ctrl+End",   MoveBottomCommand
-        
+
         link "Alt+[", BackwardNavigationCommand
         link "Alt+]", ForwardNavigationCommand
 
@@ -876,7 +876,7 @@ Redcar.environment: #{Redcar.environment}
               item "Current Word", SelectWordCommand
               item "Toggle Block Selection", ToggleBlockSelectionCommand
             end
-            
+
             sub_menu "Document Navigation" do
               item "Goto Line", GotoLineCommand
               item "Top",     MoveTopCommand
@@ -897,13 +897,13 @@ Redcar.environment: #{Redcar.environment}
               item "Delete Character",   DeleteCharCommand
               item "Backspace",          BackspaceCommand
               item "Transpose",          TransposeCharactersCommand
-              
+
               separator
-              
+
               item "Backward Navigation", BackwardNavigationCommand
               item "Forward Navigation", ForwardNavigationCommand
             end
-            
+
             sub_menu "Formatting" do
               item "Increase Indent", IncreaseIndentCommand
               item "Decrease Indent", DecreaseIndentCommand
@@ -971,9 +971,9 @@ Redcar.environment: #{Redcar.environment}
           end
           group(:priority => :last) do
             separator
-            item "Show Toolbar", :command => Application::ToggleToolbar, :type => :check, :checked => lambda { Redcar.app.show_toolbar? }
-            item "Show Invisibles", :command => ToggleInvisibles, :type => :check, :checked => lambda { EditView.show_invisibles? }
-            item "Show Line Numbers", :command => ToggleLineNumbers, :type => :check, :checked => lambda { EditView.show_line_numbers? }
+            item "Show Toolbar", :command => Application::ToggleToolbar, :type => :check, :checked => proc { Redcar.app.show_toolbar? }
+            item "Show Invisibles", :command => ToggleInvisibles, :type => :check, :checked => proc { EditView.show_invisibles? }
+            item "Show Line Numbers", :command => ToggleLineNumbers, :type => :check, :checked => proc { EditView.show_line_numbers? }
           end
         end
         sub_menu "Bundles", :priority => 45 do
@@ -992,9 +992,9 @@ Redcar.environment: #{Redcar.environment}
             item "About", AboutCommand
             item "New In This Version", ChangelogCommand
             separator
-            item "Check for Updates", :command => Application::ToggleCheckForUpdatesCommand, 
-                                      :type => :check, 
-                                      :checked => lambda { Application::Updates.check_for_updates? }
+            item "Check for Updates", :command => Application::ToggleCheckForUpdatesCommand,
+                                      :type => :check,
+                                      :checked => proc { Application::Updates.check_for_updates? }
             item "Update Available",  Application::OpenUpdateCommand
           end
         end
