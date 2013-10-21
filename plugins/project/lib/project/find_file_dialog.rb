@@ -21,7 +21,7 @@ module Redcar
         paths.uniq
       end
 
-      def update_list(filter) 
+      def update_list(filter)
         full_paths = paths_for(filter)
         display_paths = full_paths.map { |path| display_path(path) }
         if display_paths.uniq.length < full_paths.length
@@ -35,7 +35,7 @@ module Redcar
       end
 
       def selected(item, ix)
-        if item[:path] and File.exist?(item[:path])
+        if item and item[:path] and File.exist?(item[:path])
           close
           if win = Redcar.app.focussed_window and tab = win.focussed_notebook_tab and doc = tab.document
             Redcar.app.navigation_history.save(doc)
