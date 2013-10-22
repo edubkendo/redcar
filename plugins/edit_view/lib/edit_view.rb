@@ -124,7 +124,11 @@ module Redcar
                                   :type => :check,
                                   :checked => proc { tab.respond_to?(:edit_view) and tab.edit_view.show_margin? }
 
-              item proc { tab ? "Margin Column: #{tab.edit_view.margin_column}" : "Margin Column" }, SetMarginColumnCommand
+              item proc {
+                tab.respond_to?(:edit_view) ?
+                  "Margin Column: #{tab.edit_view.margin_column}" :
+                  "Margin Column"
+              }, SetMarginColumnCommand
             end
 
             separator
