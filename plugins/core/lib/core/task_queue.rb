@@ -2,9 +2,9 @@
 module Redcar
   class TaskQueue
     MAX_COMPLETED_LENGTH = 20
-    
+
     attr_reader :in_process, :mutex
-    
+
     def initialize
       @executor = java.util.concurrent.Executors.newSingleThreadExecutor
       @mutex    = Mutex.new
@@ -12,34 +12,36 @@ module Redcar
       @completed = []
       @in_process = nil
     end
-    
+
     def submit(task)
       @mutex.synchronize do
         @pending << task
         task._queue        = self
         task.enqueue_time = Time.now
-        future = @executor.submit(task)
+
+        # Removes ambiguous java call warnings
+        future = @executor.java_send :submit, [java.util.concurrent.Callable.java_class], task
       end
     end
-    
+
     def pending
       @mutex.synchronize do
         @pending.dup
       end
     end
-    
+
     def completed
       @mutex.synchronize do
         @completed.dup
       end
     end
-        
+
     def stop
       @mutex.synchronize do
         @executor.shutdown_now
       end
     end
-    
+
     def cancel_all
       @mutex.synchronize do
         @pending.each {|task| task.send(:_set_cancelled) }
@@ -49,14 +51,14 @@ module Redcar
     end
 
     private
-    
+
     def started_task(task)
       @mutex.synchronize do
         @in_process = task
         @pending.delete(task)
       end
     end
-    
+
     def completed_task(task)
       @mutex.synchronize do
         @pending.delete(task)
@@ -67,6 +69,7 @@ module Redcar
         end
       end
     end
+
   end
 end
 

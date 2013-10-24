@@ -22,6 +22,7 @@ rescue LoadError => e
 end
 
 module Redcar
+
   def self.tmp_dir
     path = File.join(Redcar.user_dir, "tmp")
     unless File.exists?(path)
@@ -29,7 +30,7 @@ module Redcar
     end
     path
   end
-    
+
   class Core
     def self.loaded
       unless File.exist?(Redcar.user_dir)
@@ -38,7 +39,7 @@ module Redcar
       PersistentCache.storage_dir = File.join(Redcar.user_dir, "cache")
     end
   end
-  
+
   class TimeoutError < StandardError; end
 
   def self.timeout(limit)

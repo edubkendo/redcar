@@ -31,14 +31,11 @@ module Redcar
     attr_accessor :listeners
 
     def initialize(path)
-      p [:new, path]
       @path   = File.expand_path(path)
       @listeners ||= {}
       dir_mirror = Project::DirMirror.new(@path)
-      p dir_mirror
       if dir_mirror.exists?
         @tree   = Tree.new(dir_mirror, Project::DirController.new)
-        p @tree
         @window = nil
         file_list_resource.compute
       else
@@ -47,7 +44,7 @@ module Redcar
     end
 
     def config_dir
-      if Redcar.platform == :windows && Redcar.environment != :test 
+      if Redcar.platform == :windows && Redcar.environment != :test
         dir = File.join(path, "._redcar")
       else
         dir = File.join(path, ".redcar")
@@ -60,7 +57,7 @@ module Redcar
       end
       dir
     end
-    
+
     def ready?
       @tree && @path
     end
@@ -138,7 +135,7 @@ module Redcar
     def storage(name)
       Redcar::Plugin::BaseStorage.new(File.join(config_dir, "storage"), name)
     end
-    
+
     def attach_listeners
       attach_notebook_listeners
       window.treebook.add_listener(:tree_removed, &method(:tree_removed))
@@ -253,7 +250,7 @@ module Redcar
       file_glob = File.join("{#{config_dir},#{Redcar.user_dir}}", glob)
       Dir[file_glob]
     end
-    
+
     def search(query)
       ProjectSearch::WordSearch.new(self, query, false, 0)
     end
