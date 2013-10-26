@@ -216,7 +216,6 @@ module Redcar
           win = Redcar.app.focussed_window
           win = Redcar.app.new_window(false) if !win or Manager.in_window(win)
           project.open(win) if project.ready?
-          p project
           Redcar.app.show_window(win)
           project
         end
