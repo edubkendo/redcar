@@ -3,6 +3,13 @@
 
 [http://redcareditor.com/](http://redcareditor.com/)
 
+## FORK!
+
+This fork of redcar doesn't reflect the current state of master on redcar/redcar. I rolled back
+to the 0.13 release before branching. I did this mostly because I had started using 0.13, and I
+wanted to fix some things, and tweak some things and add some things. Not all of those things are
+consistent with the current redcar roadmap.
+
 ## DESCRIPTION
 
 A Ruby text editor.
@@ -34,7 +41,7 @@ for more details, see [User Guide: Installation](https://github.com/redcar/redca
 
 ## USAGE
 
-Run 
+Run
 
     $ redcar --help
 
