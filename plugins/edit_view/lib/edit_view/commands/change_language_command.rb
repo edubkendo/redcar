@@ -8,14 +8,14 @@ module Redcar
           @tab = tab
           super()
         end
-        
+
         def update_list(filter)
           bundles  = JavaMateView::Bundle.bundles.to_a
           grammars = bundles.map {|b| b.grammars.to_a}.flatten
           names    = grammars.map {|g| g.name}.sort_by {|name| name.downcase }
           filter_and_rank_by(names, filter)
         end
-  
+
         def selected(name, ix)
           @tab.edit_view.grammar = name
           close
@@ -26,6 +26,6 @@ module Redcar
         ChangeLanguageDialog.new(tab).open
       end
     end
-    
+
   end
 end
