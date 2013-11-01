@@ -10,10 +10,10 @@ module Redcar
     def change_grammar(name)
       grammar_name = singleton.sanitize_grammar_name(name)
       Grammar.load_grammar
-      if Grammar.const_defined?(grammar_name)
-        grammar_klass = Grammar.const_get(grammar_name)
+      if Grammar.const_defined?(grammar_name, false)
+        grammar_klass = Grammar.const_get(grammar_name, false)
       else
-        grammar_klass = Grammar.const_get(:Default)
+        grammar_klass = Grammar.const_get(:Default, false)
       end
       @grammar = grammar_klass.instance
     end
